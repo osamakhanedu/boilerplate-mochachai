@@ -65,7 +65,14 @@ suite("Functional Tests", function () {
 });
 
 const Browser = require("zombie");
+const { suiteSetup } = require("mocha");
+Browser.site = "https://8gxwt4-3000.preview.csb.app/"; // Your URL here
 
+const browser = new Browser();
+
+suiteSetup(function (done) {
+  return browser.visit("/", done);
+});
 suite("Functional Tests with Zombie.js", function () {
   this.timeout(5000);
 
@@ -77,16 +84,38 @@ suite("Functional Tests with Zombie.js", function () {
 
   suite('"Famous Italian Explorers" form', function () {
     // #5
-    test('Submit the surname "Colombo" in the HTML form', function (done) {
-      assert.fail();
+    test('submit "surname" : "Colombo" - write your e2e test...', function (done) {
+      browser.fill("surname", "Colombo").then(() => {
+        browser.pressButton("submit", function () {
+          // assert that status is OK 200
+          browser.assert.success();
+          // assert that the text inside the element 'span#name' is 'Cristoforo'
+          browser.assert.text("span#name", "Cristoforo");
+          // assert that the text inside the element 'span#surname' is 'Colombo'
+          browser.assert.text("span#surname", "Colombo");
+          // assert that the element(s) 'span#dates' exist and their count is 1
+          browser.assert.elements("span#dates", 1);
 
-      done();
+          done(); // It's an async test, so we have to call 'done()''
+        });
+      });
     });
     // #6
     test('Submit the surname "Vespucci" in the HTML form', function (done) {
-      assert.fail();
+      browser.fill("surname", "Vespucci").then(() => {
+        browser.pressButton("submit", function () {
+          // assert that status is OK 200
+          browser.assert.success();
+          // assert that the text inside the element 'span#name' is 'Cristoforo'
+          browser.assert.text("span#name", "Amerigo");
+          // assert that the text inside the element 'span#surname' is 'Colombo'
+          browser.assert.text("span#surname", "Vespucci");
+          // assert that the element(s) 'span#dates' exist and their count is 1
+          browser.assert.elements("span#dates", 1);
 
-      done();
+          done(); // It's an async test, so we have to call 'done()''
+        });
+      });
     });
   });
 });
